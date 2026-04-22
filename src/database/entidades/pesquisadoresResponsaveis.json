@@ -24,5 +24,18 @@
     "bairro": "Jardim das Rosas",
     "estado": "RJ",
     "cidade": "Rio de Janeiro"
+  },
+  {
+    "id": 3,
+    "nome": "Ana Maria Souza",
+    "cpf": "10987654321",
+    "email": "anamariasouza@gmail.com",
+    "telefone": "11912345678",
+    "endereco": "Avenida das Flores",
+    "numero": "456",
+    "cep": "87654321",
+    "bairro": "Jardim das Rosas",
+    "estado": "RJ",
+    "cidade": "Rio de Janeiro"
   }
 ]

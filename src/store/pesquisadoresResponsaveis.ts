@@ -1,8 +1,23 @@
 import { defineStore } from 'pinia'
-import pesquisadoresResponsaveis from '@/database/entidades/pesquisadoresResponsaveis.json'
+import dadosMock from '@/database/entidades/pesquisadoresResponsaveis.json'
 
-export const usePesquisadoreResponsaveisStore = defineStore('pesquisadoresResponsaveis', {
+export const usePesquisadoresResponsaveisStore = defineStore('pesquisadoresResponsaveis', {
 	state: () => ({
-		pesquisadoresResponsaveis: [...pesquisadoresResponsaveis]
-	})
+		pesquisadoresResponsaveis: JSON.parse(
+			localStorage.getItem('pesquisadores') ||
+			JSON.stringify(dadosMock)
+		)
+	}),
+
+	actions: {
+		adicionarPesquisador(pesquisador: any) {
+			this.pesquisadoresResponsaveis.push(pesquisador)
+
+			// 🔥 SALVA NO NAVEGADOR
+			localStorage.setItem(
+				'pesquisadores',
+				JSON.stringify(this.pesquisadoresResponsaveis)
+			)
+		}
+	}
 })

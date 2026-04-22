@@ -34,11 +34,11 @@
 <script setup lang="ts">
 import CampoDeTexto from '@/components/Campos/CampoDeTexto/CampoDeTexto.vue'
 import ListaPesquisadoresResponsaveis from '@/components/ListaDeDados/ListaPesquisadoresResponsaveis.vue'
-import { usePesquisadoreResponsaveisStore } from '@/store/pesquisadoresResponsaveis'
+import { usePesquisadoresResponsaveisStore } from '@/store/pesquisadoresResponsaveis'
 import Button from 'primevue/button'
 import { ref } from 'vue'
 
-const storePesquisadores = usePesquisadoreResponsaveisStore()
+const storePesquisadores = usePesquisadoresResponsaveisStore()
 
 const buscaPesquisadorResponsavel = ref<string>('')
 </script>

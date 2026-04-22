@@ -30,16 +30,40 @@
 
 		<div class="formulario__grupo">
 			<CampoDeTexto
+				id="email-do-pesquisador"
+				nome="email-do-pesquisador"
+				rotulo="Email"
+				textoAuxiliar="Ex: email@gmail.com"
+			/>
+		</div>
+
+		<div class="formulario__grupo">
+			<CampoDeTexto
 				id="endereco-do-pesquisador"
 				nome="endereco-do-pesquisador"
 				rotulo="Endereço"
 				textoAuxiliar="Ex: Rua dos Caiacós"
 			/>
 			<CampoDeNumero
-				id="numero-do-endereço-do-pesquisador"
+				id="numero-do-endereco-do-pesquisador"
 				nome="numero-do-endereco-do-pesquisador"
 				rotulo="Número"
 				textoAuxiliar="Ex: 404"
+			/>
+		</div>
+
+		<div class="formulario__grupo">
+			<CampoDeTexto
+				id="cep-do-pesquisador"
+				nome="cep-do-pesquisador"
+				rotulo="CEP"
+				textoAuxiliar="Ex: 12345678"
+			/>
+			<CampoDeTexto
+				id="bairro-do-pesquisador"
+				nome="bairro-do-pesquisador"
+				rotulo="Bairro"
+				textoAuxiliar="Ex: Centro"
 			/>
 		</div>
 
@@ -69,58 +93,52 @@ import CampoDeTelefone from '@/components/Campos/CampoDeTelefone/CampoDeTelefone
 import CampoDeTexto from '@/components/Campos/CampoDeTexto/CampoDeTexto.vue'
 import Button from 'primevue/button'
 
-const schema = toTypedSchema(
-	z.object({
-		'nome-do-pesquisador': z
-			.union([z.string(), z.undefined()])
-			.transform(val => val || '')
-			.refine(val => val.trim().length > 0, {
-				message: 'O nome do pesquisador é obrigatório.'
-			}),
-		'cpf-do-pesquisador': z
-			.union([z.string(), z.undefined()])
-			.transform(val => val || '')
-			.refine(val => val.length === 14, {
-				message: 'O CPF deve ter 14 caracteres.'
-			}),
-		'telefone-do-pesquisador': z
-			.union([z.string(), z.undefined()])
-			.transform(val => val || '')
-			.refine(val => val.length === 15, {
-				message: 'O telefone deve ter 15 caracteres.'
-			}),
-		'endereco-do-pesquisador': z
-			.union([z.string(), z.undefined()])
-			.transform(val => val || '')
-			.refine(val => val.trim().length >= 5, {
-				message: 'O endereço deve ter pelo menos 5 caracteres.'
-			}),
-		'numero-do-endereco-do-pesquisador': z
-			.union([z.string(), z.undefined()])
-			.transform(val => val || '')
-			.refine(val => val.trim().length > 0, {
-				message: 'O número do endereço é obrigatório.'
-			}),
-		'estado-do-pesquisador': z
-			.union([z.string(), z.undefined()])
-			.transform(val => val || '')
-			.refine(val => val.trim().length > 0, {
-				message: 'Estado é obrigatório.'
-			}),
-		'cidade-do-pesquisador': z
-			.union([z.string(), z.undefined()])
-			.transform(val => val || '')
-			.refine(val => val.trim().length > 0, {
-				message: 'Cidade do pesquisador é obrigatório.'
-			})
-	})
-)
+import { usePesquisadoresResponsaveisStore } from '@/store/pesquisadoresResponsaveis'
 
-function onSubmit(values: any) {
-	console.log('Formulário válido:', values)
+const store = usePesquisadoresResponsaveisStore()
+
+
+const zodSchema = z.object({
+	'nome-do-pesquisador': z.string().min(1, 'Nome obrigatório'),
+	'cpf-do-pesquisador': z.string().min(11, 'CPF inválido'),
+	'telefone-do-pesquisador': z.string().min(14, 'Telefone inválido'),
+	'email-do-pesquisador': z.string().email('Email inválido'),
+	'endereco-do-pesquisador': z.string().min(5, 'Endereço inválido'),
+	'numero-do-endereco-do-pesquisador': z.string().min(1, 'Número obrigatório'),
+	'cep-do-pesquisador': z.string().min(8, 'CEP inválido'),
+	'bairro-do-pesquisador': z.string().min(2, 'Bairro inválido'),
+	'estado-do-pesquisador': z.any(),
+	'cidade-do-pesquisador': z.any()
+})
+
+const schema = toTypedSchema(zodSchema)
+
+type FormPesquisador = z.infer<typeof zodSchema>
+
+
+function onSubmit(values: any, { resetForm }: any) {
+	const v = values as FormPesquisador
+
+	const novo = {
+		id: Date.now(),
+		nome: v['nome-do-pesquisador'],
+		cpf: v['cpf-do-pesquisador'],
+		email: v['email-do-pesquisador'],
+		telefone: v['telefone-do-pesquisador'],
+		endereco: v['endereco-do-pesquisador'],
+		numero: v['numero-do-endereco-do-pesquisador'],
+		cep: v['cep-do-pesquisador'],
+		bairro: v['bairro-do-pesquisador'],
+		estado: v['estado-do-pesquisador']?.sigla || v['estado-do-pesquisador'],
+		cidade: v['cidade-do-pesquisador']?.label || v['cidade-do-pesquisador']
+	}
+
+	store.adicionarPesquisador(novo)
+
+	console.log('Pesquisador adicionado:', novo)
+
+	resetForm()
 }
 </script>
 
 <style scoped lang="scss"></style>
-
-Funcionou, o que você fez?
