@@ -27,10 +27,12 @@
 					icon="pi pi-pencil"
 					class="lista-de-dados__botao-editar"
 				/>
+
 				<Button
 					severity="danger"
 					icon="pi pi-trash"
 					class="lista-de-dados__botao-excluir"
+					@click="excluir(pesquisadorResponsavel.id)"
 				/>
 			</div>
 		</div>
@@ -40,9 +42,34 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
 import Dado from './Dado.vue'
-import { defineProps } from 'vue'
+//import { defineProps } from 'vue'
+import { usePesquisadoresResponsaveisStore } from '@/store/pesquisadoresResponsaveis'
 
-defineProps<{ dados: Record<string, any> }>()
+
+const store = usePesquisadoresResponsaveisStore()
+
+
+interface Pesquisador {
+	id: number
+	nome: string
+	cpf: string
+	email: string
+	telefone: string
+	endereco: string
+	numero: string
+	cep: string
+	bairro: string
+	estado: string
+	cidade: string
+}
+
+
+defineProps<{ dados: Pesquisador[] }>()
+
+
+function excluir(id: number) {
+	store.excluirPesquisador(id)
+}
 </script>
 
 <style scoped lang="scss">
